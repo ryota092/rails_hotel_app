@@ -1,0 +1,24 @@
+<h1>予約作成</h1>
+
+<%= form_with model: @reservation, url: confirm_reservations_path, local: true do |f| %>
+  <%= f.hidden_field :room_id, value: @room&.id || params.dig(:reservation, :room_id) %>
+
+  <div>
+    <%= f.label :check_in, "チェックイン日" %><br>
+    <%= f.date_field :check_in, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :check_out, "チェックアウト日" %><br>
+    <%= f.date_field :check_out, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :guests, "人数" %><br>
+    <%= f.number_field :guests, min: 1, required: true, value: (@reservation.guests || 1) %>
+  </div>
+
+  <div style="margin-top:12px;">
+    <%= f.submit "確認画面へ" %>
+  </div>
+<% end %>

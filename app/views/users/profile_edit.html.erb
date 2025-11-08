@@ -1,0 +1,56 @@
+<%# プロフィール編集フォーム %>
+<h1>プロフィール編集</h1>
+
+<%= form_with model: @user, url: profile_update_user_path(@user), local: true, html: { multipart: true } do |f| %>
+  <% if @user.errors.any? %>
+    <div class="errors" style="color:#c00; margin-bottom:12px;">
+      <strong><%= pluralize(@user.errors.count, "エラー") %>があります：</strong>
+      <ul style="margin:6px 0 0 18px;">
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-wrapper" style="max-width:720px;">
+    <div class="field" style="margin-bottom:12px;">
+      <%= f.label :name, "名前" %><br>
+      <%= f.text_field :name, style: "width:100%; box-sizing:border-box; padding:8px;" %>
+    </div>
+
+    <div class="field" style="margin-bottom:12px;">
+      <%= f.label :icon, "アイコン画像" %><br>
+
+      <% if @user.respond_to?(:icon) && @user.icon.respond_to?(:attached?) && @user.icon.attached? %>
+        <div style="margin-bottom:8px;">
+          <%= image_tag url_for(@user.icon), alt: "current icon", style: "width:64px; height:64px; object-fit:cover; border-radius:50%;" %>
+        </div>
+      <% elsif @user.respond_to?(:icon) && @user.icon.present? && @user.icon.to_s.strip =~ /\Ahttps?:\/\// %>
+        <div style="margin-bottom:8px;">
+          <%= image_tag @user.icon.to_s.strip, alt: "current icon", style: "width:64px; height:64px; object-fit:cover; border-radius:50%;" %>
+        </div>
+      <% elsif @user.respond_to?(:icon) && @user.icon.present? && defined?(asset_exists?) && asset_exists?(@user.icon.to_s.strip) %>
+        <div style="margin-bottom:8px;">
+          <%= image_tag @user.icon.to_s.strip, alt: "current icon", style: "width:64px; height:64px; object-fit:cover; border-radius:50%;" %>
+        </div>
+      <% elsif defined?(asset_exists?) && asset_exists?('default_icon.png') %>
+        <div style="margin-bottom:8px;">
+          <%= image_tag 'default_icon.png', alt: "current icon", style: "width:64px; height:64px; object-fit:cover; border-radius:50%;" %>
+        </div>
+      <% end %>
+
+      <%= f.file_field :icon, style: "display:block;" %>
+    </div>
+
+    <div class="field" style="margin-bottom:12px;">
+      <%= f.label :bio, "自己紹介" %><br>
+      <%= f.text_area :bio, rows: 6, style: "width:100%; box-sizing:border-box; padding:8px;" %>
+    </div>
+
+    <div class="actions" style="margin-top:16px;">
+      <%= f.submit "更新する", style: "padding:8px 14px; background:#1976d2; color:#fff; border:0; border-radius:4px; cursor:pointer;" %>
+      <%= f.submit "キャンセル", disable_with: 'キャンセル中...', style: "padding:8px 14px; background:#1976d2; color:#fff; border:0; border-radius:4px; cursor:pointer;" %>
+    </div>
+  </div>
+<% end %>

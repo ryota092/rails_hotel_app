@@ -1,0 +1,36 @@
+<h1>アカウント情報の編集</h1>
+
+<%= form_with model: @user, url: account_update_user_path(@user), method: :patch, local: true do |f| %>
+  <% if @user.errors.any? %>
+    <div class="errors" style="color:#c00; margin-bottom:12px;">
+      <strong><%= pluralize(@user.errors.count, "エラー") %>があります：</strong>
+      <ul style="margin:6px 0 0 18px;">
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-wrapper" style="max-width:720px;">
+    <div class="field" style="margin-bottom:12px;">
+      <%= f.label :email, "メールアドレス" %><br>
+      <%= f.email_field :email, value: @user.email, required: true, style: "width:100%; box-sizing:border-box; padding:8px;" %>
+    </div>
+
+    <div class="field" style="margin-bottom:8px;">
+      <%= f.label :password, "新しいパスワード（変更しない場合は空欄）" %><br>
+      <%= f.password_field :password, autocomplete: "new-password", style: "width:100%; box-sizing:border-box; padding:8px;" %>
+    </div>
+
+    <div class="field" style="margin-bottom:12px;">
+      <%= f.label :password_confirmation, "パスワード（確認）" %><br>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", style: "width:100%; box-sizing:border-box; padding:8px;" %>
+    </div>
+
+    <div class="actions" style="margin-top:16px;">
+      <%= f.submit "更新する", style: "padding:8px 14px; background:#1976d2; color:#fff; border:0; border-radius:4px; cursor:pointer;" %>
+      <%= f.submit "キャンセル", disable_with: 'キャンセル中...', style: "padding:8px 14px; background:#1976d2; color:#fff; border:0; border-radius:4px; cursor:pointer;" %>
+    </div>
+  </div>
+<% end %>
