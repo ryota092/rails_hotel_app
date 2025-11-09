@@ -1,0 +1,31 @@
+<h1>予約詳細</h1>
+
+<div style="max-width:800px;">
+  <h2><%= link_to @reservation.room.name, room_path(@reservation.room) %></h2>
+
+  <div style="display:flex; gap:12px; align-items:flex-start;">
+    <div style="width:200px;">
+      <% if @reservation.room.respond_to?(:image) && @reservation.room.image.attached? %>
+        <%= image_tag url_for(@reservation.room.image), style: "width:200px; height:140px; object-fit:cover; border-radius:6px;" %>
+      <% elsif defined?(asset_exists?) && asset_exists?('room_default.jpg') %>
+        <%= image_tag 'room_default.jpg', style: "width:200px; height:140px; object-fit:cover; border-radius:6px;" %>
+      <% else %>
+        <div style="width:200px; height:140px; background:#f4f4f4; display:flex; align-items:center; justify-content:center;">No Image</div>
+      <% end %>
+    </div>
+
+    <div style="flex:1;">
+      <p><strong>紹介:</strong> <%= simple_format(h(@reservation.room.description)) %></p>
+      <p><strong>チェックイン:</strong> <%= @reservation.check_in %></p>
+      <p><strong>チェックアウト:</strong> <%= @reservation.check_out %></p>
+      <p><strong>宿泊日数:</strong> <%= @reservation.nights %> 泊</p>
+      <p><strong>人数:</strong> <%= @reservation.guests %> 名</p>
+      <p><strong>合計金額:</strong> ¥<%= number_with_delimiter(@reservation.total_price || @reservation.calculate_total_price) %></p>
+
+      <p style="margin-top:12px;">
+        <%= link_to "予約一覧に戻る", reservations_path, class: "btn" %>
+        <%= link_to "予約をキャンセルする", reservation_path(@reservation), method: :delete, data: { confirm: "本当にキャンセルしますか？" }, class: "btn" %>
+      </p>
+    </div>
+  </div>
+</div>

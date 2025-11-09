@@ -1,0 +1,30 @@
+<h1>マイページ</h1>
+
+<p>
+  <strong>名前:</strong>
+  <%= @user.name %>
+</p>
+
+<p>
+  <strong>メールアドレス:</strong>
+  <%= @user.email %>
+</p>
+
+<p>
+  <strong>パスワード:</strong>
+  ********
+</p>
+
+
+
+<%if @user.bio.present?%>
+  <h2>自己紹介</h2>
+  <section style="max-width:720px; margin-bottom:24px;">
+    <p style="white-space:pre-wrap;"><%= @user.bio %></p>
+  </section>
+<%end%>
+
+<p>
+  <%= link_to "編集", edit_user_path(@user) %> |
+  <%= link_to "プロフィール編集", profile_edit_user_path(@user) %>
+</p>

@@ -1,0 +1,30 @@
+<h1>予約一覧（自分の予約）</h1>
+
+<% if @reservations.empty? %>
+  <p>現在予約はありません。</p>
+<% else %>
+  <% @reservations.each do |r| %>
+    <div style="border:1px solid #eee; padding:12px; margin-bottom:10px; border-radius:6px;">
+      <div style="display:flex; gap:12px;">
+        <div style="width:120px;">
+          <% if r.room.respond_to?(:image) && r.room.image.attached? %>
+            <%= link_to image_tag(url_for(r.room.image), style: "width:120px; height:80px; object-fit:cover;"), room_path(r.room) %>
+          <% elsif defined?(asset_exists?) && asset_exists?('room_default.jpg') %>
+            <%= link_to image_tag('room_default.jpg', style: "width:120px; height:80px; object-fit:cover;"), room_path(r.room) %>
+          <% else %>
+            <div style="width:120px; height:80px; background:#f4f4f4;"></div>
+          <% end %>
+        </div>
+
+        <div style="flex:1;">
+          <h3><%= link_to r.room.name, room_path(r.room) %></h3>
+          <p><%= truncate(r.room.description.to_s, length: 120) %></p>
+          <p><strong>合計金額:</strong> ¥<%= number_with_delimiter(r.total_price || r.calculate_total_price) %></p>
+          <p><strong>チェックイン:</strong> <%= r.check_in %>　
+             <strong>チェックアウト:</strong> <%= r.check_out %></p>
+          <p style="color:#999;">予約確定日時: <%= r.created_at.strftime("%Y/%m/%d %H:%M") %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

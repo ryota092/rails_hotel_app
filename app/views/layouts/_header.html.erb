@@ -1,0 +1,61 @@
+<nav class="site-header" style="position:relative; z-index:2000; padding:8px 16px; border-bottom:1px solid #eaeaea;">
+  <div style="display:flex; align-items:center; justify-content:space-between; max-width:1100px; margin:0 auto;">
+    <div class="site-brand">
+      <%= link_to "HotelApp", root_path, style: "font-weight:bold; font-size:18px; text-decoration:none;" %>
+    </div>
+
+    <div class="site-nav" style="display:flex; align-items:center; gap:12px;">
+      <% if logged_in? %>
+        <div class="user-area" style="position:relative; z-index:2500;">
+          <button id="user-toggle" style="background:none; border:0; cursor:pointer; display:flex; align-items:center; gap:8px;">
+
+            <% if current_user.respond_to?(:icon) && current_user.icon.respond_to?(:attached?) && current_user.icon.attached? %>
+              <%= image_tag url_for(current_user.icon), alt: "icon", style: "width:32px;height:32px;border-radius:50%;" %>
+
+            <% elsif current_user.respond_to?(:icon) && current_user.icon.present? && current_user.icon.to_s.strip =~ /\Ahttps?:\/\// %>
+              <%= image_tag current_user.icon.to_s.strip, alt: "icon", style: "width:32px;height:32px;border-radius:50%;" %>
+
+
+            <% elsif current_user.respond_to?(:icon) && current_user.icon.present? && asset_exists?(current_user.icon.to_s.strip) %>
+              <%= image_tag current_user.icon.to_s.strip, alt: "icon", style: "width:32px;height:32px;border-radius:50%;" %>
+
+            <% elsif asset_exists?('default_icon.png') %>
+              <%= image_tag 'default_icon.png', alt: "icon", style: "width:32px;height:32px;border-radius:50%;" %>
+            <% else %>
+              <span style="display:inline-block;width:32px;height:32px;border-radius:50%;background:#ccc;"></span>
+            <% end %>
+
+            <span><%= current_user.name %></span>
+            <span style="margin-left:6px;">▾</span>
+          </button>
+
+          <div id="user-dropdown" style="display:none; position:absolute; right:0; background:white; border:1px solid #ddd; box-shadow:0 4px 8px rgba(0,0,0,0.05); border-radius:4px; padding:8px; min-width:160px; z-index:3000;">
+            <%= link_to "マイページ", user_path(current_user), style: "display:block; padding:6px 8px; text-decoration:none; color:#333;" %>
+            <%= link_to "マイ予約一覧", reservations_path, style: "display:block; padding:6px 8px; text-decoration:none; color:#333;" %>
+            <%= link_to "アカウント情報編集", edit_user_path(current_user), style: "display:block; padding:6px 8px; text-decoration:none; color:#333;" %>
+            <%= link_to "プロフィール編集", profile_edit_user_path(current_user), style: "display:block; padding:6px 8px; text-decoration:none; color:#333;" %>
+            <%= button_to "ログアウト", logout_path, method: :delete, form: { style: "display:block; margin:0; padding:6px 8px; background:none; border:0; text-align:left;" }, data: { confirm: "ログアウトしますか？" } %>
+          </div>
+        </div>
+      <% else %>
+        <%= link_to "ログイン", new_session_path, class: "nav-link", style: "text-decoration:none;" %>
+        <%= link_to "新規登録", new_user_path, class: "nav-link", style: "text-decoration:none;" %>
+      <% end %>
+    </div>
+  </div>
+</nav>
+
+<script>
+  (function(){
+    var btn = document.getElementById('user-toggle');
+    var dd = document.getElementById('user-dropdown');
+    if (!btn) return;
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      dd.style.display = (dd.style.display === 'block') ? 'none' : 'block';
+    });
+    document.addEventListener('click', function(e){
+      if (!btn.contains(e.target) && (!dd || !dd.contains(e.target))) { dd.style.display = 'none'; }
+    });
+  })();
+</script>

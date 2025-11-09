@@ -1,0 +1,28 @@
+<h1>施設検索</h1>
+
+<%= form_with url: search_rooms_path, method: :get, local: true do |f| %>
+  <div>
+    <%= f.label :area, "エリア" %>
+    <%= f.select :area, options_for_select([["-- 選択しない --", ""], "東京", "大阪", "京都", "札幌"], selected: params[:area]), {}, style: "margin-right:8px;" %>
+    <%= f.label :q, "フリーワード" %>
+    <%= f.text_field :q, value: params[:q], placeholder: "施設名・施設詳細を検索", style: "width:320px; margin-left:8px;" %>
+    <%= f.submit "検索" %>
+  </div>
+<% end %>
+
+<hr>
+
+<p>検索結果: <strong><%= @count %></strong> 件</p>
+
+<% if @rooms.any? %>
+  <% @rooms.each do |room| %>
+    <div style="border-bottom:1px solid #eee; padding:12px 0;">
+      <h3><%= link_to room.name, room_path(room) %></h3>
+      <p><strong>住所:</strong> <%= room.address %></p>
+      <p><strong>紹介:</strong> <%= truncate(room.description.to_s, length: 140) %></p>
+      <p><strong>料金:</strong> ¥<%= number_with_delimiter(room.price) %> / 日</p>
+    </div>
+  <% end %>
+<% else %>
+  <p>該当する施設はありません。</p>
+<% end %>

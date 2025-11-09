@@ -1,0 +1,20 @@
+<h1>予約確認</h1>
+
+<p><strong>施設:</strong> <%= link_to @reservation.room.name, room_path(@reservation.room) %></p>
+<p><strong>チェックイン:</strong> <%= @reservation.check_in %></p>
+<p><strong>チェックアウト:</strong> <%= @reservation.check_out %></p>
+<p><strong>宿泊日数:</strong> <%= @reservation.nights %>泊</p>
+<p><strong>人数:</strong> <%= @reservation.guests %>名</p>
+<p><strong>合計金額:</strong> ¥<%= number_with_delimiter(@total) %></p>
+
+<%= form_with model: @reservation, url: reservations_path, local: true do |f| %>
+  <%= f.hidden_field :room_id, value: @reservation.room.id %>
+  <%= f.hidden_field :check_in, value: @reservation.check_in %>
+  <%= f.hidden_field :check_out, value: @reservation.check_out %>
+  <%= f.hidden_field :guests, value: @reservation.guests %>
+
+  <div style="margin-top:12px;">
+    <%= f.submit "予約を確定する" %>
+    <%= link_to "戻る", new_reservation_path(room_id: @reservation.room.id) %>
+  </div>
+<% end %>

@@ -1,0 +1,28 @@
+<h1>施設一覧（自分が作成した施設）</h1>
+
+<p><%= link_to "新規登録", new_room_path, class: "btn" %></p>
+
+<% if @rooms.empty? %>
+  <p>まだ施設がありません。</p>
+<% else %>
+  <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px;">
+    <% @rooms.each do |room| %>
+      <div class="room-card" style="border:1px solid #eee; padding:12px; border-radius:6px; background:#fff;">
+        <% if room.respond_to?(:image) && room.image.attached? %>
+          <%= link_to image_tag(url_for(room.image), alt: room.name, style: "width:100%; height:160px; object-fit:cover; border-radius:4px;"), room_path(room) %>
+        <% elsif defined?(asset_exists?) && asset_exists?('room_default.jpg') %>
+          <%= link_to image_tag('room_default.jpg', alt: room.name, style: "width:100%; height:160px; object-fit:cover; border-radius:4px;"), room_path(room) %>
+        <% else %>
+          <div style="width:100%; height:160px; background:#f4f4f4; display:flex; align-items:center; justify-content:center; color:#888; border-radius:4px;">
+            No Image
+          </div>
+        <% end %>
+
+        <h3 style="margin:8px 0 4px;"><%= link_to room.name, room_path(room), style: "text-decoration:none; color:#333;" %></h3>
+        <p style="color:#666; font-size:14px; margin:0 0 8px;"><%= truncate(room.description.to_s, length: 80) %></p>
+        <p style="margin:0; font-weight:bold;">¥<%= number_with_delimiter(room.price) %> / 日</p>
+        <p style="color:#999; font-size:12px; margin-top:6px;">作成日: <%= room.created_at.strftime("%Y/%m/%d") %></p>
+      </div>
+    <% end %>
+  </div>
+<% end %>
