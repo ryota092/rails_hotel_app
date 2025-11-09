@@ -68,7 +68,7 @@ class UsersController < ApplicationController
     if @user.update(ap)
       redirect_to user_path(@user), notice: "アカウント情報を更新しました"
     else
-      render :account_edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_entity
     end
   end
 
